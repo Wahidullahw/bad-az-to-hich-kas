@@ -15,47 +15,55 @@ import englishSource from './quotes-en.txt?raw'
  const cleanLine = (line) => line.replace(/[\uFEFF\u200E\u200B]/g, '').trim()
  const toEnglishFallback = () => ''
  const poemOpenings = [
-   'شب آمد و دل، دوباره سراغت را گرفت؛',
-   'در سکوت خانه، نام تو آرام می‌بارد؛',
-   'ماه از پشت پنجره گذشت و من یاد تو افتادم؛',
-   'دل من هنوز در کوچه‌های خاطره قدم می‌زند؛',
-   'هرچه شب عمیق‌تر شد، نبودنت روشن‌تر ماند؛',
-   'در من چراغی‌ست که با یاد تو روشن می‌شود؛',
-   'باران گرفت و دلم به سمت تو برگشت؛',
-   'گاهی تمام جهان، در یک خاطره خلاصه می‌شود؛',
-   'من از میان این همه سکوت، صدای دلم را شنیدم؛',
-   'عشق اگر دور هم باشد، از دل بیرون نمی‌رود؛'
+   'شب، چراغ پنجره را برای دلم روشن کرد؛', 'باران، نام تو را روی شیشه نوشت؛',
+   'ماه از شانه‌های شهر آرام گذشت؛', 'در کوچه‌های خاموش، عطر تو مانده بود؛',
+   'دل من امشب دوباره شاعر شد؛', 'سکوت، آهسته کنار من نشست؛',
+   'صبح هنوز دور بود و من به تو فکر می‌کردم؛', 'یک ستاره از آسمان دلتنگی افتاد؛',
+   'پنجره باز بود و خاطره‌ها می‌آمدند؛', 'در فنجان چای، گرمای دستت را دیدم؛',
+   'باد از سمت خانه‌ات خبر آورد؛', 'شب، پرده‌ای از مخمل بر شهر کشید؛'
+ ]
+ const poemMiddles = [
+   'من از میان تاریکی، ردّ روشن نگاهت را گرفتم؛', 'هر قطره باران، یک حرف نگفته با خود داشت؛',
+   'نامت هنوز در سکوت قلبم موسیقی‌ست؛', 'دوری تو، فاصله نیست؛ راهی‌ست پر از یاد تو؛',
+   'دلم برای خنده‌ای که سهم من بود تنگ شد؛', 'هیچ چراغی مثل خاطره تو گرم نمی‌تابد؛',
+   'من ماندم و یک شهر که تو را شبیه خودش نمی‌دید؛', 'عشق تو در رگ‌های شب آرام آرام می‌دوید؛',
+   'هر بار که چشم بستم، به آغوش خاطره رسیدم؛', 'دستانم هنوز جای خالی دستت را به یاد دارند؛',
+   'تمام راه‌های جهان به سمت قلب من برمی‌گشتند؛', 'تو دور بودی و دلم به اندازه یک نفس نزدیکت؛'
+ ]
+ const poemTurns = [
+   'اما نبودنت، سکوت را از همیشه بلندتر کرد؛', 'اما رفتنت، بهار را پشت در نگه داشت؛',
+   'اما دل، برای دوست داشتن اجازه نمی‌خواهد؛', 'اما چشم‌های من هنوز به آمدنت ایمان دارند؛',
+   'اما بعضی زخم‌ها با نام عشق زیباتر می‌شوند؛', 'اما خاطره، راه برگشتن به تو را بلد است؛',
+   'اما شب هم می‌داند که این دلتنگی تمام نمی‌شود؛', 'اما من از خاکستر فاصله، شعر می‌سازم؛',
+   'اما قلبم هنوز برای معجزه‌ای کوچک جا دارد؛', 'اما هیچ خداحافظی نمی‌تواند عشق را خاموش کند؛',
+   'اما باران، راز ماندن را به من یاد داد؛', 'اما در من هنوز پنجره‌ای رو به تو باز است؛'
  ]
  const poemClosings = [
-   'و من، هنوز در انتهای این شب، تو را صدا می‌زنم.',
-   'شاید دلتنگی، نام دیگر دوست داشتن باشد.',
-   'بعضی نبودن‌ها، از هر حضوری نزدیک‌ترند.',
-   'این دل شکسته هنوز برای عشق، جا دارد.',
-   'خاطره رفتنی نیست؛ فقط آهسته‌تر نفس می‌کشد.',
-   'و صبح، از همین جای تاریک آغاز خواهد شد.',
-   'کاش می‌شد فاصله را با یک نگاه کوتاه کرد.',
-   'من ماندم و شعری که هنوز پایان نگرفته است.',
-   'در سینه‌ام، برای تو یک فصل ناتمام مانده است.',
-   'هرچه از تو دورتر شدم، به خودم نزدیک‌تر شدم.'
+   'و عشق، آرام‌ترین نامی‌ست که برای تو دارم.', 'شاید دلتنگی، شکل دیگر دوست داشتن باشد.',
+   'من تو را در روشن‌ترین جای شب نگه داشته‌ام.', 'این قصه هنوز در قلب من ادامه دارد.',
+   'فردا شاید با بوی آمدنت آغاز شود.', 'من از نبودنت گذشتم، از دوست داشتنت نه.',
+   'برای تو، همیشه یک شعر تازه خواهم داشت.', 'هرچه دورتر شوی، این دل به تو نزدیک‌تر است.',
+   'و من هنوز به معجزه دیدنت باور دارم.', 'نام تو پایان هیچ شعری نخواهد بود.',
+   'بگذار این شب، شاهد عاشق ماندن من باشد.', 'تو رفتی، اما زیبایی‌ات در من جا ماند.'
  ]
- const toPoem = (text, index) => {
-   const lines = text.split('\n').map(cleanLine).filter(Boolean)
-   const opening = poemOpenings[index % poemOpenings.length]
-   const closing = poemClosings[(index * 3) % poemClosings.length]
-   return [opening, ...lines, closing].join('\n')
- }
+ const toPoem = (index) => [
+   poemOpenings[index % poemOpenings.length],
+   poemMiddles[Math.floor(index / poemOpenings.length) % poemMiddles.length],
+   poemTurns[Math.floor(index / 24) % poemTurns.length],
+   poemClosings[(index * 7) % poemClosings.length]
+ ].join('\n')
  const parseQuotes = (source) => {
    const normalized = source.replace(/\r/g, '').replace(/\u2028/g, '\n').split('\n').map(cleanLine)
    const markerIndex = normalized.findIndex((line) => line === '۸')
    const opening = normalized.slice(0, markerIndex).filter(Boolean)
-  const result = [{ fa: toPoem(opening.slice(0, 2).join('\n'), 0), en: firstTranslations[0] }]
+  const result = [{ fa: toPoem(0), en: firstTranslations[0] }]
    for (let index = 1; index <= 7; index += 1) {
      const marker = ['۱', '۲', '۳', '۴', '۵', '۶', '۷'][index - 1]
      const start = opening.indexOf(`${marker}.`)
-    result.push({ fa: toPoem(opening.slice(start + 1, start + 3).join('\n'), index), en: firstTranslations[index] })
+    result.push({ fa: toPoem(index), en: firstTranslations[index] })
    }
    const remaining = normalized.slice(markerIndex + 1).filter(Boolean)
-  remaining.forEach((fa, index) => result.push({ fa: toPoem(fa, index + 8), en: toEnglishFallback(fa) }))
+  remaining.forEach((fa, index) => result.push({ fa: toPoem(index + 8), en: toEnglishFallback(fa) }))
    return result
  }
  const quotes = parseQuotes(quotesSource)
