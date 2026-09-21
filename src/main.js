@@ -14,18 +14,48 @@ import englishSource from './quotes-en.txt?raw'
  ]
  const cleanLine = (line) => line.replace(/[\uFEFF\u200E\u200B]/g, '').trim()
  const toEnglishFallback = () => ''
+ const poemOpenings = [
+   'شب آمد و دل، دوباره سراغت را گرفت؛',
+   'در سکوت خانه، نام تو آرام می‌بارد؛',
+   'ماه از پشت پنجره گذشت و من یاد تو افتادم؛',
+   'دل من هنوز در کوچه‌های خاطره قدم می‌زند؛',
+   'هرچه شب عمیق‌تر شد، نبودنت روشن‌تر ماند؛',
+   'در من چراغی‌ست که با یاد تو روشن می‌شود؛',
+   'باران گرفت و دلم به سمت تو برگشت؛',
+   'گاهی تمام جهان، در یک خاطره خلاصه می‌شود؛',
+   'من از میان این همه سکوت، صدای دلم را شنیدم؛',
+   'عشق اگر دور هم باشد، از دل بیرون نمی‌رود؛'
+ ]
+ const poemClosings = [
+   'و من، هنوز در انتهای این شب، تو را صدا می‌زنم.',
+   'شاید دلتنگی، نام دیگر دوست داشتن باشد.',
+   'بعضی نبودن‌ها، از هر حضوری نزدیک‌ترند.',
+   'این دل شکسته هنوز برای عشق، جا دارد.',
+   'خاطره رفتنی نیست؛ فقط آهسته‌تر نفس می‌کشد.',
+   'و صبح، از همین جای تاریک آغاز خواهد شد.',
+   'کاش می‌شد فاصله را با یک نگاه کوتاه کرد.',
+   'من ماندم و شعری که هنوز پایان نگرفته است.',
+   'در سینه‌ام، برای تو یک فصل ناتمام مانده است.',
+   'هرچه از تو دورتر شدم، به خودم نزدیک‌تر شدم.'
+ ]
+ const toPoem = (text, index) => {
+   const lines = text.split('\n').map(cleanLine).filter(Boolean)
+   const opening = poemOpenings[index % poemOpenings.length]
+   const closing = poemClosings[(index * 3) % poemClosings.length]
+   return [opening, ...lines, closing].join('\n')
+ }
  const parseQuotes = (source) => {
    const normalized = source.replace(/\r/g, '').replace(/\u2028/g, '\n').split('\n').map(cleanLine)
    const markerIndex = normalized.findIndex((line) => line === '۸')
    const opening = normalized.slice(0, markerIndex).filter(Boolean)
-   const result = [{ fa: opening.slice(0, 2).join('\n'), en: firstTranslations[0] }]
+  const result = [{ fa: toPoem(opening.slice(0, 2).join('\n'), 0), en: firstTranslations[0] }]
    for (let index = 1; index <= 7; index += 1) {
      const marker = ['۱', '۲', '۳', '۴', '۵', '۶', '۷'][index - 1]
      const start = opening.indexOf(`${marker}.`)
-     result.push({ fa: opening.slice(start + 1, start + 3).join('\n'), en: firstTranslations[index] })
+    result.push({ fa: toPoem(opening.slice(start + 1, start + 3).join('\n'), index), en: firstTranslations[index] })
    }
    const remaining = normalized.slice(markerIndex + 1).filter(Boolean)
-   remaining.forEach((fa) => result.push({ fa, en: toEnglishFallback(fa) }))
+  remaining.forEach((fa, index) => result.push({ fa: toPoem(fa, index + 8), en: toEnglishFallback(fa) }))
    return result
  }
  const quotes = parseQuotes(quotesSource)
